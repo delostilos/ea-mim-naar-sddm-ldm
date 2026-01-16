@@ -2,7 +2,14 @@
 
 Metamodel Informatiemodellering (MIM) modellen zijn veelal met [Sparx Enterprise Architect](https://sparxsystems.com/products/ea/) (EA) in Unified Modeling Language (UML) beschreven. Voor EA is een betaalde licentie nodig en het is alleen voor Windows beschikbaar. Op de [EA downloads pagina](https://sparxsystems.com/products/ea/downloads.html) is echter wel een viewer beschikbaar. Dus het bekijken van de MIM modellen is mogelijk via de viewer.
 
-[Oracle SQL Developer Data Modeler](https://www.oracle.com/database/sqldeveloper/technologies/sql-data-modeler/) (SDDM) is een gratis beschikbaare modelleer tool die op meerdere platformen beschikbaar is. Op de [SDDM download pagina](https://www.oracle.com/database/sqldeveloper/technologies/sql-data-modeler/download/) zijn versies voor Windows, Mac OSX en Linux beschikbaar.
+[Oracle SQL Developer Data Modeler](https://www.oracle.com/database/sqldeveloper/technologies/sql-data-modeler/) (SDDM) is een gratis beschikbaare modelleer tool die op meerdere platformen beschikbaar is. Op de [SDDM download pagina](https://www.oracle.com/database/sqldeveloper/technologies/sql-data-modeler/download/) zijn versies voor Windows, Mac OSX en Linux beschikbaar. Een SDDM Design kan verschillende modellen bevatten in een hierarchie:
+- Logical model -< Relational model -< Physical model
+
+We zetten het MIM model om naar een LDM, zodat we van hieruit meerdere Relational modellen ten behoeve van de implementatie kunnen aanmaken:
+1. modellen voor de structuur
+2. modellen voor de flow
+
+Die we dan later uitwerken naar een fysieke imlementatie via scripting templates.
 
 ## Groovy in SDDM
 Om een EA model in te lezen gaan we de scripting mogelijkheden van SDDM gebruiken. Aangezien SDDM een Java applicatie is en ik ervaring heb met de scriptingtaal Groovy in Java, is het script in Groovy opgezet. Daarvoor moeten we wel eerst Groovy als scripting engine toevoegen aan SDDM.
@@ -27,13 +34,11 @@ Nu is de Groovy scripting taal beschikbaar voor SDDM.
 
 Een EA model wordt opgeslagen als een MS Access database voor versies kleiner dan 16. Voor hogere versies is het een sqlite database.
 In de blog [Suchen und Finden 2: Enterprise Architect DB-Schema](https://blog.sparxsystems.de/en_GB/ea/ea-features/ea-model-search/enterprise-architect-db-schema/) is het database schema getoond. Via queries op de repository kunnen we de EA model elementen ophalen en omzetten naar de LDM model elementen. Door de MIM modellen naar SDDM om te zetten is het beschikbaar in een vrije modelleer tool.
-Een SDDM Design kan verschillende modellen bevatten in een hierarchie:
-- Logical model -< Relational model -< Physical model
 
-We zetten het MIM model om naar een LDM, zodat we van hieruit meerdere Relational modellen ten behoeve van de implementatie:
-1. modellen voor de structuur
-2. modellen voor de flow
-Die we dan later uitwerken naar een fysieke imlementatie via scripting templates.
+We gaan het [Fietsenwinkel MIM 1.2 voorbeeld model](https://github.com/Geonovum/mim-metamodel/werkomgeving/voorbeeldmodel/uml/EA15_Fietsenwinkel(mim1.2).EAP) gebruiken als eerste referentie model, aangezien het alle concepten bevat. Later gaan we het nog testen met ander modellen zoals:
+- het model voor de Basisadministratie Adressen en Gebouwen (BAG)
+- de MIM variant van het Gemeentelijk Gegevens Model (GGM), een groter model
+- ...
 
     
 Uit het [MIM-Werkomgeving/MetamodelUML](https://github.com/Geonovum/MIM-Werkomgeving/blob/master/MetamodelUML.md) hebben we de tabellen met de MIM-modelelement mappings overgenomen en de SDDM varianten toegevoegd:    
