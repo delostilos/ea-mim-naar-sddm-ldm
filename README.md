@@ -26,9 +26,17 @@ Nu is de Groovy scripting taal beschikbaar voor SDDM.
 ## De EA repository
 
 Een EA model wordt opgeslagen als een MS Access database voor versies kleiner dan 16. Voor hogere versies is het een sqlite database.
-In de blog [Suchen und Finden 2: Enterprise Architect DB-Schema](https://blog.sparxsystems.de/en_GB/ea/ea-features/ea-model-search/enterprise-architect-db-schema/) is het database schema getoond. Via queries op de repository kunnen we de EA model elementen ophalen en omzetten naar de LDM model elementen.
+In de blog [Suchen und Finden 2: Enterprise Architect DB-Schema](https://blog.sparxsystems.de/en_GB/ea/ea-features/ea-model-search/enterprise-architect-db-schema/) is het database schema getoond. Via queries op de repository kunnen we de EA model elementen ophalen en omzetten naar de LDM model elementen. Door de MIM modellen naar SDDM om te zetten is het beschikbaar in een vrije modelleer tool.
+Een SDDM Design kan verschillende modellen bevatten in een hierarchie:
+- Logical model -< Relational model -< Physical model
+
+We zetten het MIM model om naar een LDM, zodat we van hieruit meerdere Relational modellen ten behoeve van de implementatie:
+1. modellen voor de structuur
+2. modellen voor de flow
+Die we dan later uitwerken naar een fysieke imlementatie via scripting templates.
+
     
-Uit de [MIM-Werkomgeving/MetamodelUML](https://github.com/Geonovum/MIM-Werkomgeving/blob/master/MetamodelUML.md) hebben we de tabellen met de MIM-modelelement mappings overgenomen en de SDDM varianten toegevoegd:    
+Uit het [MIM-Werkomgeving/MetamodelUML](https://github.com/Geonovum/MIM-Werkomgeving/blob/master/MetamodelUML.md) hebben we de tabellen met de MIM-modelelement mappings overgenomen en de SDDM varianten toegevoegd:    
 
 ### Kern zonder Metagegevens
 
