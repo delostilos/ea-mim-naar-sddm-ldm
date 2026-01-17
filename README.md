@@ -2,7 +2,7 @@
 
 Metamodel Informatiemodellering (MIM) modellen zijn veelal met [Sparx Enterprise Architect](https://sparxsystems.com/products/ea/) (EA) in Unified Modeling Language (UML) beschreven. Voor EA is een betaalde licentie nodig en het is alleen voor Windows beschikbaar. Op de [EA downloads pagina](https://sparxsystems.com/products/ea/downloads.html) is echter wel een viewer beschikbaar. Dus het bekijken van de MIM modellen is mogelijk via de viewer.
 
-[Oracle SQL Developer Data Modeler](https://www.oracle.com/database/sqldeveloper/technologies/sql-data-modeler/) (SDDM) is een gratis beschikbaare modelleer tool die op meerdere platformen beschikbaar is. Op de [SDDM download pagina](https://www.oracle.com/database/sqldeveloper/technologies/sql-data-modeler/download/) zijn versies voor Windows, Mac OSX en Linux beschikbaar. Door de MIM modellen naar SDDM om te zetten is het beschikbaar in een vrije modelleer tool. Een SDDM Design kan verschillende modellen bevatten in een hierarchie:
+[Oracle SQL Developer Data Modeler](https://www.oracle.com/database/sqldeveloper/technologies/sql-data-modeler/) (SDDM) is een gratis beschikbare modelleer tool die op meerdere platformen beschikbaar is. Op de [SDDM download pagina](https://www.oracle.com/database/sqldeveloper/technologies/sql-data-modeler/download/) zijn versies voor Windows, Mac OSX en Linux beschikbaar. Door de MIM modellen naar SDDM om te zetten is het beschikbaar in een vrije modelleer tool. Een SDDM Design kan verschillende modellen bevatten in een hierarchie:
 - Logical model -< Relational model -< Physical model
 
 We zetten het MIM model om naar een LDM, zodat we van hieruit meerdere Relational modellen ten behoeve van de implementatie kunnen aanmaken:
@@ -35,8 +35,8 @@ Om een EA model in te lezen gaan we de scripting mogelijkheden van SDDM gebruike
     - ucanaccess-5.0.1.jar
 6. Voor SQLite:
     - sqlite-jdbc-3.50.1.0.jar
-7. En ook nog voor DuckDB, dat we mogelijk later nog gaan gebruiken:
-    - duckdb_jdbc-1.3.0.0.jar  
+7. En ook nog voor [DuckDB](https://repo1.maven.org/maven2/org/duckdb/duckdb_jdbc/1.4.3.0/duckdb_jdbc-1.4.3.0.jar), dat we mogelijk later nog gaan gebruiken:
+    - duckdb_jdbc-1.4.3.0.jar  
 8. Daarna de datamodeler.conf aangepast en het volgende toegevoegd: 
     ```
     #Add for MS Access driver libs
@@ -82,8 +82,6 @@ Uit het [MIM-Werkomgeving/MetamodelUML](https://github.com/Geonovum/MIM-Werkomge
 | Relatieklasse     | «Relatieklasse»     | (UML) Association én (UML) Class |  Associationclass | Relationship met Attributes  
 
 ### Datatypen zonder Metagegevens
-
-_Datatypen_
 
 | **MIM metaclass**       | **Stereotype**          | **Metaclass UML 2.5**    |  **In EA**          | **In SDDM**                
 | ----------------------- | ----------------------- | ------------------------ | ------------------ | ----------- 
