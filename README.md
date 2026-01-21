@@ -16,25 +16,25 @@ Om een EA model in te lezen gaan we de scripting mogelijkheden van SDDM gebruike
 
 1. Ga naar de [Groovy download pagina](http://groovy-lang.org/download.html) en kies de laatste versie.
 2. Download de "SDK Bundle" en unzip het bestand.
-3. Ik heb in de ../datamodeler/lib deze libraries toegevoegd:
-    - groovy-jsr223-4.0.27.jar
-    - groovy-4.0.27.jar
-    - groovy-sql-4.0.27.jar
+3. Ik heb in de ../datamodeler/datamodeler/lib deze libraries toegevoegd:
+    - groovy-jsr223-5.0.4.jar
+    - groovy-5.0.4.jar
+    - groovy-sql-5.0.4.jar
 4. Daarna de datamodeler.conf aangepast en het volgende toegevoegd: 
     ```
     #Add Groovy scripting
-    AddJavaLibFile ../lib/groovy-jsr223-4.0.27.jar
-    AddJavaLibFile ../lib/groovy-4.0.27.jar
-    AddJavaLibFile ../lib/groovy-sql-4.0.27.jar
+    AddJavaLibFile ../lib/groovy-jsr223-5.0.4.jar
+    AddJavaLibFile ../lib/groovy-5.0.4.jar
+    AddJavaLibFile ../lib/groovy-sql-5.0.4.jar
     ```
-5. Ik heb in mijn jdbc folder deze libraries toegevoegd voor UCanAccess:
+5. Ik heb in ../datamodeler/jdbc/lib folder deze libraries toegevoegd voor UCanAccess:
     - commons-lang3-3.8.1.jar
     - commons-logging-1.2.jar
     - hsqldb-2.5.0.jar
     - jackcess-3.0.1.jar
     - ucanaccess-5.0.1.jar
 6. Voor SQLite:
-    - sqlite-jdbc-3.50.1.0.jar
+    - sqlite-jdbc-3.51.1.0.jar
 7. En ook nog voor [DuckDB](https://repo1.maven.org/maven2/org/duckdb/duckdb_jdbc/1.4.3.0/duckdb_jdbc-1.4.3.0.jar), dat we mogelijk later nog gaan gebruiken:
     - duckdb_jdbc-1.4.3.0.jar  
 8. Daarna de datamodeler.conf aangepast en het volgende toegevoegd: 
@@ -46,11 +46,10 @@ Om een EA model in te lezen gaan we de scripting mogelijkheden van SDDM gebruike
     AddJavaLibFile ../../jdbc/lib/jackcess-3.0.1.jar
     AddJavaLibFile ../../jdbc/lib/ucanaccess-5.0.1.jar
     #Add DuckDB driver
-    AddJavaLibFile ../../jdbc/lib/duckdb_jdbc-1.3.0.0.jar
+    AddJavaLibFile ../../jdbc/lib/duckdb_jdbc-1.4.3.0.jar
     #Add SQLite driver
-    AddJavaLibFile ../../jdbc/lib/sqlite-jdbc-3.50.1.0.jar
+    AddJavaLibFile ../../jdbc/lib/sqlite-jdbc-3.51.1.0.jar
     ```
-    Het pad is hier natuurlijk afhanklijk van de plek waar je de JDBC drivers hebt geplaatst.
 9. Herstart SDDM   
 
 Nu is de Groovy scripting taal beschikbaar voor SDDM en de Groovy SQL module om de EA bestanden te kunnen bevragen. 
