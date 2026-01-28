@@ -89,9 +89,9 @@ Uit het [MIM-Werkomgeving/MetamodelUML](https://github.com/Geonovum/MIM-Werkomge
 | Data-element            | «Data-element»          | (UML) Property           | Attribute          | Attribute van Structured Type               
 | Enumeratie              | \-                      | (UML) Enumeration        | Enumeration        | Domain                     
 | Enumeratiewaarde        | \-                      | (UML) EnumerationLiteral | EnumerationLiteral | Domain Value 
-| Referentielijst         | «Referentielijst»       | (UML) Datatype           | Datatype           | Entity met Relationship naar Entity                    
+| Referentielijst         | «Referentielijst»       | (UML) Datatype           | Datatype           | Structured Type                    
 | Referentie-element      | «Referentie-element»    | (UML) Property           | Attribute          | Attribute                  
-| Codelijst               | «Codelijst»             | (UML) Datatype           | Datatype           | Structured Type met Waade-item als Attribuut                    
+| Codelijst               | «Codelijst»             | (UML) Datatype           | Datatype           | Structured Type met Waarde-item als Attribuut                    
        
 **De modellering van een Keuze**
 
