@@ -82,16 +82,16 @@ Uit het [MIM-Werkomgeving/MetamodelUML](https://github.com/Geonovum/MIM-Werkomge
 
 ### Datatypen zonder Metagegevens
 
-| **MIM metaclass**       | **Stereotype**          | **Metaclass UML 2.5**    |  **In EA**          | **In SDDM**                
-| ----------------------- | ----------------------- | ------------------------ | ------------------ | ----------- 
-| Primitief datatype      | «Primitief datatype»    | (UML) Primitive Type     | Datatype           | Logical Data Type of Distinct Type             
-| Gestructureerd datatype | «Gestructuurd datatype» | (UML) Datatype           | Datatype           | Structured Type            
-| Data-element            | «Data-element»          | (UML) Property           | Attribute          | Attribute van Structured Type               
-| Enumeratie              | \-                      | (UML) Enumeration        | Enumeration        | Domain                     
-| Enumeratiewaarde        | \-                      | (UML) EnumerationLiteral | EnumerationLiteral | Domain Value 
-| Referentielijst         | «Referentielijst»       | (UML) Datatype           | Datatype           | Structured Type                    
-| Referentie-element      | «Referentie-element»    | (UML) Property           | Attribute          | Attribute                  
-| Codelijst               | «Codelijst»             | (UML) Datatype           | Datatype           | Structured Type met Waarde-item als Attribuut                    
+| **MIM metaclass**       | **Stereotype**           | **Metaclass UML 2.5**    |  **In EA**          | **In SDDM**                
+| ----------------------- | ------------------------ | ------------------------ | ------------------ | ----------- 
+| Primitief datatype      | «Primitief datatype»     | (UML) Primitive Type     | Datatype           | Logical Data Type of Distinct Type             
+| Gestructureerd datatype | «Gestructureerd datatype»| (UML) Datatype           | Datatype           | Structured Type            
+| Data-element            | «Data-element»           | (UML) Property           | Attribute          | Attribute van Structured Type               
+| Enumeratie              | \-                       | (UML) Enumeration        | Enumeration        | Domain                     
+| Enumeratiewaarde        | \-                       | (UML) EnumerationLiteral | EnumerationLiteral | Domain Value 
+| Referentielijst         | «Referentielijst»        | (UML) Datatype           | Datatype           | Structured Type                    
+| Referentie-element      | «Referentie-element»     | (UML) Property           | Attribute          | Attribute                  
+| Codelijst               | «Codelijst»              | (UML) Datatype           | Datatype           | Structured Type met Waarde-item als Attribuut                    
        
 **De modellering van een Keuze**
 
