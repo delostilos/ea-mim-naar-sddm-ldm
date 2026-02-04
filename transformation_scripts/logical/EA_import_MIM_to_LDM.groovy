@@ -392,6 +392,22 @@ sql.eachRow(simple_type_query) { e ->
      if (distinctType.logicalDataType.name == 'String') {
      	distinctType.size = '255'
      }
+     // voeg de tags toe als dynamische properties in SDDM
+	def entity_tag_query = """
+	select * 
+	  from t_objectproperties 
+	 where object_id = $e.object_id 
+	 order 
+	    by propertyid
+	"""
+     sql.eachRow(entity_tag_query){ p ->
+          def tag_waarde = p.value ?: ''
+     	distinctType.setProperty("$p.property","$tag_waarde")
+     	// we zetten de omscrijving in een eigen dynamic property die als naam <property>-note heeft
+     	if (p.notes) {
+     		distinctType.setProperty("${p.property.toString()}-note",p.notes.toString())
+     	}
+     }
      distinctType.dirty = true
 }
 log "Klaar met simple types"
@@ -429,7 +445,7 @@ select o.*
     or (o.object_type = 'DataType' and o.stereotype in ('Keuze','Union') and exists (select 1 from t_attribute a where a.object_id = o.object_id) ) 
 """
 // we vullen de complexe typen in SDDM 
-// Deze oplossing werkt niet goed als er een struct in de sleutel wordt gebruikt (TODO: uitzoeken hoe het wel kan.)
+// Een funtie gemaakt, om het herhaalbaar uit tevoeren voor geneste stucture types.
 def structuredTypes = {
 	log "Start met complexe typen"
 	sql.eachRow(struct_query) { e ->
@@ -471,12 +487,29 @@ def structuredTypes = {
 	     
 		// we voegen het object_id toe als extra property
 	     structuredType.setProperty('Id', e.object_id.toString())
-	     log "StructuredType $structuredType.name aangemaakt"
+	     // voeg de tags toe als dynamische properties in SDDM
+		def entity_tag_query = """
+		select * 
+		  from t_objectproperties 
+		 where object_id = $e.object_id 
+		 order 
+		    by propertyid
+		"""
+	     sql.eachRow(entity_tag_query){ p ->
+	          def tag_waarde = p.value ?: ''
+	     	structuredType.setProperty("$p.property","$tag_waarde")
+	     	// we zetten de omscrijving in een eigen dynamic property die als naam <property>-note heeft
+	     	if (p.notes) {
+	     		structuredType.setProperty("${p.property.toString()}-note",p.notes.toString())
+	     	}
+	     }
+		     log "StructuredType $structuredType.name aangemaakt"
 	     structuredType.dirty = true
 	}	
 	log "Klaar met complexe typen"
 }
-// 2x om embedded structs mee te nemen
+// 2x om embedded structure types mee te nemen. Voor nu ok.
+// Een keuze kan een structure type zijn met data types van het type structure!
 structuredTypes()
 structuredTypes()
 
@@ -518,18 +551,21 @@ sql.eachRow(entity_query) { e ->
 				entity.typeID = objectTypeCT.typeID
     	 	     }
     	 	break
+    	 	/* omgezet naar structured type
     	 	case 'Gegevensgroeptype':
 			entity.typeID = gegevensgroepTypeCT.typeID     	 	
-       	break
+       	break */
+       	/* omgezet naar structured type
     	 	case 'Referentielijst':
 			entity.typeID = referentieLijstCT.typeID    	 		
-    	 	break
+    	 	break */
     	 	case 'Keuze':
 			entity.typeID = keuzeCT.typeID     	 	
        	break
+       	/* omgezet naar structured type
     	 	case 'Codelijst':
 			entity.typeID = codeLijstCT.typeID     	 	
-       	break        	
+       	break */	
      	//default: geen classificartion type
    	}
 
