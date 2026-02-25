@@ -594,104 +594,65 @@ sql.eachRow(entity_query) { e ->
      def keyName = "PK_${e.name}"
      sql.eachRow(t_attribute_query(e.object_id)){ a ->
           //log a.toString()
+          //if (a.UpperBound == '1') {
+     	def attribute = entity.attributes.find{att -> att.objectID == a.ea_guid.toString()} ?: entity.createAttribute()
+	     attribute.objectID = a.ea_guid
+	     attribute.name = a.name
+	     attribute.comment = a.notes
+	     attribute.nullsAllowed = a.lowerbound == '1' ? false : true
+		// map het data type
+          def dataType = attributeToLogicalType(a)
+          // vanaf hier collection type meenemen
+          def collectionType
           if (a.UpperBound == '1') {
-	     	def attribute = entity.attributes.find{att -> att.objectID == a.ea_guid.toString()} ?: entity.createAttribute()
-		     attribute.objectID = a.ea_guid
-		     attribute.name = a.name
-		     attribute.comment = a.notes
-		     attribute.nullsAllowed = a.lowerbound == '1' ? false : true
-			// map het data type
-	          def dataType = attributeToLogicalType(a)
-	          attribute.use = dataType.use
-	          switch (dataType.use) {
-	          	case 0 :
-	          		attribute.domain = dataType.type
-	          	break
-	          	case 1 :
-	          	 	attribute.logicalDatatype = dataType.type
-	          	break
-	          	case 2 :
-	          	 	attribute.distinctType = dataType.type
-	          	break
-	          	// 2 distinct type
-	          	case 3 :
-	          	 	attribute.structuredType = dataType.type
-	          	break          	
-	          }
-			attribute.dataTypePrecision = dataType.precision
-			attribute.dataTypeScale = dataType.scale
-			attribute.dataTypeSize = dataType.size
-			// We voegen een kandidaat sleutel toe met de attributen waarvan de isID property is gezet. 
-			if (a.is_id == 1) {
-				//def candidateKey = entity.uniqueIdentifiers.find{key -> key.name == keyName} ?: entity.createCandidateKey()
-				def candidateKey = entity.uniqueIdentifiers.find{key -> key.name == keyName} ?: entity.createKeyObject()
-				log a.id_ea_guid.toString()
-				candidateKey.objectID = candidateKey.objectID ?: a.id_ea_guid
-				candidateKey.name = keyName
-				candidateKey.PK = true
-				candidateKey.add(attribute)
-				candidateKey.dirty = true
-				//log "key attributes ${candidateKey.newElementsCollection}"
-			} 
-			attribute.setProperty("Id",a.id.toString())
-			attribute.dirty = true
+          	attribute.use = dataType.use
           } else {
-          	// multi value attribuut, dus nieuwe entiteit met attibuut en relatie naar hoofd entiteit
-              	def entity_multy = model.entitySet.find{ent -> ent.objectID == "${a.ea_guid}-ent"} ?: model.createEntity()
-		    	entity_multy.objectID = "${a.ea_guid}-ent"
-			// we gebruiken hier de EA notatie met :: als scheidings teken
-			entity_multy.name = "${e.package_name}::${a.name}"
-			entity_multy.shortName = a.name
-			entity_multy.comment = a.notes
-			entity_multy.setProperty('Id',a.object_id.toString())
-			entity_multy.setProperty('Stereotype',a.stereotype.toString())
-			entity_multy.typeID = multiValueCT.typeID
-			// het attribuut
-		     def attribute = entity_multy.attributes.find{att -> att.objectID == a.ea_guid.toString()} ?: entity_multy.createAttribute()
-		     attribute.objectID = a.ea_guid
-		     attribute.name = a.name
-		     attribute.comment = a.notes
-		     attribute.nullsAllowed = a.lowerbound == '1' ? false : true
-			// map het data type
-	          def dataType = attributeToLogicalType(a)
-	          attribute.use = dataType.use
-	          switch (dataType.use) {
-	          	case 0 :
-	          		attribute.domain = dataType.type
-	          	break
-	          	case 1 :
-	          	 	attribute.logicalDatatype = dataType.type
-	          	break
-	          	// 2 distinct type
-	          	case 3 :
-	          	 	attribute.structuredType = dataType.type
-	          	break          	
-	          }
-			attribute.dataTypePrecision = dataType.precision
-			attribute.dataTypeScale = dataType.scale
-			attribute.dataTypeSize = dataType.size
-			// relatie toevoegen
-			def relationship = model.relationSet.find{rel -> rel.objectID == "${a.ea_guid}-rel"} ?: model.createRelation()
-			relationship.objectID = "${a.ea_guid}-rel"
-			//relationship.name =  "${r.start_package_name}::${r.start_object_name} ${r.name ?: '->'} ${r.end_package_name}::${r.end_object_name}"
-			relationship.comment = a.notes
-			relationship.sourceEntity = (model.entitySet.find{ent -> ent.objectID == e.ea_guid.toString()})
-			relationship.name =  "${entity.name} ${'multi value'} ${e.package_name}::${a.name}"
-			relationship.optionalSource = true 
-			relationship.sourceCardinalityString = a.lowerbound
-			relationship.targetEntity = (model.entitySet.find{ent -> ent.objectID == "${a.ea_guid}-ent"})
-			relationship.optionalTarget = false
-			relationship.targetCardinalityString = '*'
-			relationship.identifying = true
-			def keyMultyName = "${a.name}_PK"
-			def candidateMultyKey = entity_multy.uniqueIdentifiers.find{key -> key.name == keyMultyName} ?: entity_multy.createKeyObject()
-			//log a.id_ea_guid.toString()
-			candidateMultyKey.objectID = candidateMultyKey.objectID ?: a.id_ea_guid
-			candidateMultyKey.name = keyMultyName
-			candidateMultyKey.PK = true
-			candidateMultyKey.add(attribute)
-			candidateMultyKey.dirty = true
+          	// collection type nodig
+			collectionType = model.design.dataTypesDesign.collectionTypeSet.find{coll -> coll.objectID == "${a.ea_guid}_collection"} ?: model.design.dataTypesDesign.createCollectionType() 
+			collectionType.objectID = "${a.ea_guid}_collection"
+          	collectionType.name = "${a.name}_collection"
+          	collectionType.type = "COLLECTION"
+          	collectionType.maxLengthAsString = 255
+	          collectionType.dataTypeWrapper.precision = dataType.precision
+			collectionType.dataTypeWrapper.scale = dataType.scale
+			collectionType.dataTypeWrapper.size = dataType.size
+			collectionType.dataTypeWrapper.typeID = dataType.type.id
+          	attribute.use = 4
+     	}
+          switch (attribute.use) {
+          	case 0 :
+          		attribute.domain = dataType.type
+          	break
+          	case 1 :
+          	 	attribute.logicalDatatype = dataType.type
+          	break
+          	case 2 :
+          	 	attribute.distinctType = dataType.type
+          	break
+          	case 3 :
+          	 	attribute.structuredType = dataType.type
+          	break      
+          	case 4 :
+          	 	attribute.collectionType = collectionType
+          	break 
           }
+		attribute.dataTypePrecision = dataType.precision
+		attribute.dataTypeScale = dataType.scale
+		attribute.dataTypeSize = dataType.size
+		// We voegen een kandidaat sleutel toe met de attributen waarvan de isID property is gezet. 
+		if (a.is_id == 1) {
+			//def candidateKey = entity.uniqueIdentifiers.find{key -> key.name == keyName} ?: entity.createCandidateKey()
+			def candidateKey = entity.uniqueIdentifiers.find{key -> key.name == keyName} ?: entity.createKeyObject()
+			log a.id_ea_guid.toString()
+			candidateKey.objectID = candidateKey.objectID ?: a.id_ea_guid
+			candidateKey.name = keyName
+			candidateKey.PK = true
+			candidateKey.add(attribute)
+			candidateKey.dirty = true
+			//log "key attributes ${candidateKey.newElementsCollection}"
+		} 
+		attribute.setProperty("Id",a.id.toString())
+		attribute.dirty = true
      }
      // een code lijst bevat in ieder geval een code veld
      if (e.object_type == 'DataType' && e.stereotype == 'Codelijst'){
