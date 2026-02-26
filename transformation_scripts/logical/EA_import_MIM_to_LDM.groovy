@@ -593,8 +593,6 @@ sql.eachRow(entity_query) { e ->
      // voeg de attributen toe
      def keyName = "PK_${e.name}"
      sql.eachRow(t_attribute_query(e.object_id)){ a ->
-          //log a.toString()
-          //if (a.UpperBound == '1') {
      	def attribute = entity.attributes.find{att -> att.objectID == a.ea_guid.toString()} ?: entity.createAttribute()
 	     attribute.objectID = a.ea_guid
 	     attribute.name = a.name
@@ -602,7 +600,6 @@ sql.eachRow(entity_query) { e ->
 	     attribute.nullsAllowed = a.lowerbound == '1' ? false : true
 		// map het data type
           def dataType = attributeToLogicalType(a)
-          // vanaf hier collection type meenemen
           def collectionType
           if (a.UpperBound == '1') {
           	attribute.use = dataType.use
@@ -641,13 +638,23 @@ sql.eachRow(entity_query) { e ->
 		attribute.dataTypeSize = dataType.size
 		// We voegen een kandidaat sleutel toe met de attributen waarvan de isID property is gezet. 
 		if (a.is_id == 1) {
-			//def candidateKey = entity.uniqueIdentifiers.find{key -> key.name == keyName} ?: entity.createCandidateKey()
-			def candidateKey = entity.uniqueIdentifiers.find{key -> key.name == keyName} ?: entity.createKeyObject()
-			log a.id_ea_guid.toString()
+			def candidateKey = entity.uniqueIdentifiers.find{key -> key.name == keyName} ?: entity.createCandidateKey()
+			//log a.id_ea_guid.toString()
 			candidateKey.objectID = candidateKey.objectID ?: a.id_ea_guid
 			candidateKey.name = keyName
 			candidateKey.PK = true
-			candidateKey.add(attribute)
+			if (attribute.use == 3) {
+				// attribute is structured type
+				attribute.dataType.attributesList.each{ sta ->
+					// we moeten het nested attribute opzoeken dat uit het structured type komt om het te kunnen toevoegen aan de sleutel
+					def nestedAttribute = entity.nestedElements.find{ ne -> ne.name == "${attribute.name}.${sta.name}"}			
+					if (nestedAttribute) {
+						candidateKey.add(nestedAttribute)
+					}
+				}
+			} else {
+				candidateKey.add(attribute)
+			}
 			candidateKey.dirty = true
 			//log "key attributes ${candidateKey.newElementsCollection}"
 		} 
